@@ -1,5 +1,5 @@
 # CftTask
-![JAVA version](https://img.shields.io/static/v1?label=Java&message=1.8&color=orange)
+
 ## Описание задачи
 Написать программу сортировки слиянием нескольких файлов.
 Входные файлы содержат данные одного из двух видов: целые числа или строки. Данные записаны
@@ -48,3 +48,5 @@
 ссылки на такие библиотеки (можно в формате зависимостей системы сборки).
 
 ## Инструкция по запуску
+![JAVA version](https://img.shields.io/static/v1?label=Java&message=1.8&color=orange)
+![JAVA version](https://img.shields.io/static/v1?label=Maven&message=1.8&color=orange)
