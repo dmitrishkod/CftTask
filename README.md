@@ -49,4 +49,4 @@
 
 ## Инструкция по запуску
 ![JAVA version](https://img.shields.io/static/v1?label=Java&message=1.8&color=orange)
-![Maven version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fgoogle%2Fguava%2Fguava%2Fmaven-metadata.xml&versionPrefix=4.0.0)
+![Maven version](https://img.shields.io/maven/v/:groupId/:artifactId?versionPrefix=4.0)
