@@ -49,4 +49,4 @@
 
 ## Инструкция по запуску
 ![JAVA version](https://img.shields.io/static/v1?label=Java&message=1.8&color=orange)
-![Maven version](https://img.shields.io	/maven-central/v/:groupId/:artifactId?versionPrefix=29&versionSuffix=-android)
+![Maven version](https://img.shields.io/maven-central/v/:groupId/:artifactId?versionPrefix=29&versionSuffix=-android)
