@@ -5,19 +5,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
-        String message = "Вам необходимо прописать сообщение в следубщем формате в одну строку с пробелами:\\n\" +\n" +
-                "1. Режим сортировки (-a или -d), необязательный, по умолчанию сортируем по возрастанию;\\n\" +\n" +
-                "2. Тип данных (-s или -i), обязательный;\\n\" +\n" +
-                "3. Имя выходного файла, обязательное (прописываем полностью путь, где мы хотим создать файл и его формат);\\n\" +\n" +
-                "4. Остальные параметры – имена входных файлов, не менее одного.Также можно указать папку, \" +\n" +
-                "в которой хранятся только файлы для слияния(прописываем полностью путь, какой файл или папку с файлами мы хотим найти).\\n\" +\n" +
-                "Пример: \"-d -s C:\\Program Files\\out.txt C:\\Program Files\\files\"\"";
+        String message = "Вам необходимо прописать сообщение в следубщем формате в одну строку с пробелами:\n" +
+                "1. Режим сортировки (-a или -d), необязательный, по умолчанию сортируем по возрастанию;\n" +
+                "2. Тип данных (-s или -i), обязательный;\n" +
+                "3. Имя выходного файла, обязательное (прописываем полностью путь, где мы хотим создать файл и его формат);\n" +
+                "4. Остальные параметры – имена входных файлов, не менее одного.Также можно указать папку,\n" +
+                "в которой хранятся только файлы для слияния(прописываем полностью путь, какой файл или папку с файлами мы хотим найти).\n" +
+                "Пример: \"-d -s C:\\Program Files\\out.txt C:\\Program Files\\files\"";
 
         Scanner scanner = new Scanner(System.in);
 
@@ -31,25 +32,27 @@ public class Main {
             }
             String [] text = str.split(" ");
 
+
             String mode = SortSetting.sortMode(text[0]);
-            String type = "";
-            String fileOut = "";
-            List <String> filesIn = new ArrayList<>();
-
-            if (mode.equals("Ascending(default)")){
-                type = SortSetting.dataType(mode);
-                fileOut = text[1];
-
-                for (int i = 2; i < text.length; i++) {
-                    filesIn.add(text[i]);
-                }
-            }
-            type = SortSetting.dataType(text[1]);
-
             if (text.length < 3 && mode.equals("Ascending(default)") || text.length < 4 && !mode.equals("Ascending(default)")){
                 System.out.println("Некорректный формат сообщения, попробуйте еще раз.\n" + message);
                 continue;
             }
+            String type = "";
+            String fileOut = "";
+            List <String> filesIn = new ArrayList<>();
+
+
+            if (mode.equals("Ascending(default)")){
+                type = SortSetting.dataType(text[0]);
+                fileOut = text[1];
+                for (int i = 2; i < text.length; i++) {
+                    filesIn.add(text[i]);
+                }
+            }
+
+
+
             if (type.equals("bug")){
                 System.out.println("Неверный формат типа данных, необходимо указать корректный.\n" + message);
                 continue;
@@ -57,14 +60,12 @@ public class Main {
 
             if (fileOut.equals("")){
                 fileOut = text[2];
-            }
-            if (filesIn.size()< 1){
+                type = SortSetting.dataType(text[1]);
                 for (int i = 3; i < text.length; i++) {
                     filesIn.add(text[i]);
                 }
             }
-
-            File newFile = new File(fileOut); // создаем out файл
+            new File(fileOut); // создаем out файл
 
             for (String path: filesIn) {
                 FindFile.findFile(new File(path));
@@ -81,15 +82,22 @@ public class Main {
                 }
             }
 
-            //TODO применяем и указываем сортировку строчную или числовую
+            LinkedList<String> list = new LinkedList<>();
 
-
-            if (listOfLists.size()== 1){
-                //TODO прописываем сортировку одного файла с учетом других режимов и типов
+            if (type.equals("Integer")){
+                LinkedList<Integer> listInt = SortSetting.mergeInteger(mode,listOfLists);
+                for (int i :listInt) {
+                    list.add(String.valueOf(i));
+                }
+            }else if (type.equals("String")){
+                list = SortSetting.mergeString(mode,listOfLists);
             }
 
-            //TODO прописываем сортировку если файлов больше чем один
-
+            try {
+                Files.write(Paths.get(fileOut),list);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
