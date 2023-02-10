@@ -51,8 +51,6 @@ public class Main {
                 }
             }
 
-
-
             if (type.equals("bug")){
                 System.out.println("Неверный формат типа данных, необходимо указать корректный.\n" + message);
                 continue;
@@ -71,30 +69,52 @@ public class Main {
                 FindFile.findFile(new File(path));
             }
             List<String> paths = FindFile.getPaths(); // получили список всех путей, который пользователю необходимо сортировать слиянием
-            List<List<String>> listOfLists = new ArrayList<>();
 
+
+            List<String> allElements = new ArrayList<>();
             for (String path: paths) {
                 try {
                     List<String> elements = Files.readAllLines(Paths.get(path));
-                    listOfLists.add(elements);
+                    allElements.addAll(elements);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            LinkedList<String> list = new LinkedList<>();
-
-            if (type.equals("Integer")){
-                LinkedList<Integer> listInt = SortSetting.mergeInteger(mode,listOfLists);
-                for (int i :listInt) {
-                    list.add(String.valueOf(i));
-                }
-            }else if (type.equals("String")){
-                list = SortSetting.mergeString(mode,listOfLists);
+            int number = 0;
+            String[] list = new String[allElements.size()];
+            for (String string: allElements) {
+                list[number] = string;
+                number++;
             }
 
+            List<String> correctList = new ArrayList<>();
+            if (type.equals("Integer")){
+                int numberStr = 0;
+                int [] listInt = new int[allElements.size()];
+                for (String string: allElements) {
+                    if (!SortSetting.isDigit(string)){
+                        numberStr++;
+                    }
+                    listInt[numberStr] = Integer.parseInt(string);
+                    numberStr++;
+                }
+                int [] result = SortSetting.sortArrayInt(listInt,mode);
+                for (int i = 0; i < result.length; i++) {
+                    correctList.add(String.valueOf(result[i]));
+                }
+            } else if (type.equals("String")){
+
+                String [] resultStr = SortSetting.sortArrayStr(list,mode);
+                for (int i = 0; i < resultStr.length; i++) {
+                    correctList.add(String.valueOf(resultStr[i]));
+                }
+           }
+
             try {
-                Files.write(Paths.get(fileOut),list);
+                Files.write(Paths.get(fileOut),correctList);
+                System.out.println("Файл с названием " + Paths.get(fileOut).getFileName() + " записан.");
+                break;
             } catch (IOException e) {
                 e.printStackTrace();
             }

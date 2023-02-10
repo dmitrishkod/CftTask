@@ -1,8 +1,6 @@
 package src.main.java;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class SortSetting {
 
@@ -28,177 +26,119 @@ public class SortSetting {
         return "bug";
     }
 
-    public static LinkedList<Integer> mergeInteger(String mode, List<List<String>> filesIn){
-        LinkedList <Integer> correctList = new LinkedList();
-        int [] groupA = new int[0];
-        int [] groupB = new int[0];
-        int [] groupC = new int[0];
-        for (List<String> listElements:filesIn) {
-            if (groupA.length != 0 && groupB.length != 0){
-                groupC = new int[listElements.size()];
-                int c = 0;
-                for (String element:listElements) {
-                    if (isNumeric(element)){
-                        groupC[c] = Integer.parseInt(element);
-                        c++;
-                    }
-                }
-            }
-            else if (groupA.length != 0){
-                groupB = new int[listElements.size()];
-                int b = 0;
-                for (String element:listElements) {
-                    if (isNumeric(element)) {
-                        groupB[b] = Integer.parseInt(element);
-                        b++;
-                    }
-                }
-            }
+    private static int[] mergeArrayInt(int [] groupA, int [] groupB, String mode){
+        int[] res = new int[groupA.length + groupB.length];
+        int n = groupA.length;
+        int m = groupB.length;
+        int i = 0, j = 0, k = 0;
+        if (mode.equals("Descending")){
+        while (i < n && j < m) {
+            if (groupA[i] >= groupB[j]) {
+                res[k] = groupA[i];
+                i++; }
             else {
-                groupA = new int[listElements.size()];
-                int a = 0;
-                for (String element:listElements) {
-                    if (isNumeric(element)){
-                        groupA[a] = Integer.parseInt(element);
-                        a++;
-                    }
-                }
-            }
+                res[k] = groupB[j];
+                j++; }
+            k++; } }
+        else {
+            while (i < n && j < m) {
+                if (groupA[i] <= groupB[j]) {
+                    res[k] = groupA[i];
+                    i++; }
+                else {
+                    res[k] = groupB[j];
+                    j++; }
+                k++; }
         }
-        if (groupC.length == 0){
-            correctList = mergeArrayInt(groupA,groupB,mode);
-            return correctList;
-        }
-        List<Integer> correctListAB = mergeArrayInt(groupA,groupB,mode);
+        while (i < n) {
+            res[k] = groupA[i];
+            i++;
+            k++; }
+        while (j < m) {
+            res[k] = groupB[j];
+            j++;
+            k++; }
+        return res;
+    }
 
-        int[] groupAB = new int[correctListAB.size()];
-        int a = 0;
-        for (Integer element:correctListAB) {
-            groupAB[a] = element;
-            a++;
+    public static int [] sortArrayInt(int[] arrayA, String mode){
+        if (arrayA == null) {
+            return null;
         }
-        correctList = mergeArrayInt(groupAB,groupC,mode);
-        return correctList;
+        if (arrayA.length < 2) {
+            return arrayA;
+        }
+        int [] arrayB = new int[arrayA.length / 2];
+        System.arraycopy(arrayA, 0, arrayB, 0, arrayA.length / 2);
+
+        int [] arrayC = new int[arrayA.length - arrayA.length / 2];
+        System.arraycopy(arrayA, arrayA.length / 2, arrayC, 0, arrayA.length - arrayA.length / 2);
+
+        arrayB = sortArrayInt(arrayB,mode);
+        arrayC = sortArrayInt(arrayC, mode);
+
+
+        return mergeArrayInt(arrayB, arrayC, mode);
+    }
+
+    public static String [] sortArrayStr(String[] arrayA, String mode){
+        if (arrayA == null) {
+            return null;
+        }
+        if (arrayA.length < 2) {
+            return arrayA;
+        }
+        String [] arrayB = new String[arrayA.length / 2];
+        System.arraycopy(arrayA, 0, arrayB, 0, arrayA.length / 2);
+
+        String [] arrayC = new String[arrayA.length - arrayA.length / 2];
+        System.arraycopy(arrayA, arrayA.length / 2, arrayC, 0, arrayA.length - arrayA.length / 2);
+
+        arrayB = sortArrayStr(arrayB,mode);
+        arrayC = sortArrayStr(arrayC, mode);
+
+
+        return mergeArrayStr(arrayB, arrayC, mode);
     }
 
 
-    public static LinkedList<String> mergeString(String mode, List<List<String>> filesIn){
-        LinkedList <String> correctList = new LinkedList();
-        String [] groupA = new String[0];
-        String [] groupB = new String[0];
-        String [] groupC = new String[0];
-
-        for (List<String> listElements:filesIn) {
-            if (groupA.length != 0 && groupB.length != 0){
-                groupC = new String[listElements.size()];
-                int c = 0;
-                for (String element:listElements) {
-                    groupC[c] = element;
-                    c++;
-
-                }
-            }
-            else if (groupA.length != 0){
-                groupB = new String[listElements.size()];
-                int b = 0;
-                for (String element:listElements) {
-                    groupB[b] = element;
-                    b++;
-                }
-            }
-            else {
-                groupA = new String[listElements.size()];
-                int a = 0;
-                for (String element:listElements) {
-                    groupA[a] = element;
-                    a++;
-                }
-            }
+    private static String[] mergeArrayStr(String [] groupA, String [] groupB, String mode){
+        String[] res = new String[groupA.length + groupB.length];
+        int n = groupA.length;
+        int m = groupB.length;
+        int i = 0, j = 0, k = 0;
+        if (mode.equals("Descending")){
+            while (i < n && j < m) {
+                if (groupA[i].length() >= groupB[j].length()) {
+                    res[k] = groupA[i];
+                    i++; }
+                else {
+                    res[k] = groupB[j];
+                    j++; }
+                k++; } }
+        else {
+            while (i < n && j < m) {
+                if (groupA[i].length() <= groupB[j].length()) {
+                    res[k] = groupA[i];
+                    i++; }
+                else {
+                    res[k] = groupB[j];
+                    j++; }
+                k++; }
         }
-        if (groupC.length == 0){
-            correctList = mergeArrayStr(groupA,groupB,mode);
-            return correctList;
-        }
-        List<String> correctListAB = mergeArrayStr(groupA,groupB,mode);
-
-        String[] groupAB = new String[correctListAB.size()];
-        int a = 0;
-        for (String element:correctListAB) {
-            groupAB[a] = element;
-            a++;
-        }
-        correctList = mergeArrayStr(groupAB,groupC,mode);
-        return correctList;
+        while (i < n) {
+            res[k] = groupA[i];
+            i++;
+            k++; }
+        while (j < m) {
+            res[k] = groupB[j];
+            j++;
+            k++; }
+        return res;
     }
-
-    public static LinkedList<Integer> mergeArrayInt(int [] groupA, int [] groupB, String mode){
-        int positionA = 0;
-        int positionB = 0;
-        LinkedList<Integer> correctList = new LinkedList<>();
-
-        for (int i = 0; i < groupA.length + groupB.length; i++) {
-            if (positionA == groupA.length) {
-                correctList.add(groupB[i - positionB - 1]);
-                positionB++;
-            } else if (positionB == groupB.length) {
-                correctList.add(groupA[i - positionA - 1]);
-                positionA++;
-            } else if (mode.equals("Descending")) {
-                if (groupA[i - positionA] > groupB[i - positionB]) {
-                    correctList.add(groupA[i - positionA]);
-                    positionB++;
-                } else {
-                    correctList.add(groupB[i - positionB]);
-                    positionA++;
-                }
-            } else {
-                if (groupA[i - positionA] < groupB[i - positionB]) {
-                    correctList.add(groupA[i - positionA]);
-                    positionB++;
-                } else {
-                    correctList.add(groupB[i - positionB]);
-                    positionA++;
-                }
-            }
-        }
-        return correctList;
-    }
-
-    public static LinkedList<String> mergeArrayStr(String [] groupA, String [] groupB, String mode){
-        int positionA = 0;
-        int positionB = 0;
-        LinkedList<String> correctList = new LinkedList<>();
-        for (int i = 0; i < groupA.length + groupB.length; i++) {
-            if (positionA == groupA.length) {
-                correctList.add(groupB[i - positionB]);
-                positionB++;
-            } else if (positionB == groupB.length) {
-                correctList.add(groupA[i - positionA]);
-                positionA++;
-            } else if (mode.equals("Descending")) {
-                if (groupA[i - positionA].length() > groupB[i - positionB].length()) {
-                    correctList.add(groupA[i - positionA]);
-                    positionB++;
-                } else {
-                    correctList.add(groupB[i - positionB]);
-                    positionA++;
-                }
-            } else {
-                if (groupA[i - positionA].length() < groupB[i - positionB].length()) {
-                    correctList.add(groupA[i - positionA]);
-                    positionB++;
-                } else {
-                    correctList.add(groupB[i - positionB]);
-                    positionA++;
-                }
-            }
-        }
-        return correctList;
-    }
-
-    public static boolean isNumeric(String str) {
+    public static boolean isDigit(String s) throws NumberFormatException {
         try {
-            Integer.parseInt(str);
+            Integer.parseInt(s);
             return true;
         } catch (NumberFormatException e) {
             return false;
